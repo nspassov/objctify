@@ -76,7 +76,7 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
       target.add_system_library_tbd(%w[z iconv])
       target.add_system_framework('UIKit')
 
-      path = File.expand_path("#{j2objc_home}/frameworks/JRE.framework")
+      path = File.expand_path("#{j2objc_home}/frameworks/JRE.xcframework")
       unless (ref = project.frameworks_group.find_file_by_path(path))
         ref = project.frameworks_group.new_file(path, :absolute)
       end
@@ -85,7 +85,8 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
       target.build_configurations.each do |config|
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = false
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "#{j2objc_home}/frameworks"
-        config.build_settings['HEADER_SEARCH_PATHS'] = "#{j2objc_home}/frameworks/JRE.framework/Headers"
+        config.build_settings['USER_HEADER_SEARCH_PATHS'] = "#{j2objc_home}/include"
+        config.build_settings['LIBRARY_SEARCH_PATHS'] = "#{j2objc_home}/lib"
 
         # Workaround
         config.build_settings['SUPPORTS_MACCATALYST'] = false
