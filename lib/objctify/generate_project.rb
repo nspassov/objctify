@@ -87,6 +87,7 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "#{j2objc_home}/frameworks"
         config.build_settings['USER_HEADER_SEARCH_PATHS'] = "#{j2objc_home}/include"
         config.build_settings['LIBRARY_SEARCH_PATHS'] = "#{j2objc_home}/lib"
+        config.build_settings['GENERATE_INFOPLIST_FILE'] = true
 
         # Workaround
         config.build_settings['SUPPORTS_MACCATALYST'] = false
