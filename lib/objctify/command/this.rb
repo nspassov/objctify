@@ -53,7 +53,8 @@ module Objctify
         puts 'Cleaning'
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
-        Objctify::generate_project(framework_name, j2objc_home)
+        useArc = project.j2objc_config.extra_cli_args.include? "-use-arc"
+        Objctify::generate_project(framework_name, j2objc_home, useArc)
         puts 'Done'
       end
     end

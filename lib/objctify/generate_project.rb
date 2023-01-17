@@ -9,7 +9,7 @@ require 'xcodeproj'
 
 module Objctify
 
-  def self.generate_project(framework_name, j2objc_home)
+  def self.generate_project(framework_name, j2objc_home, useArc)
     project = Xcodeproj::Project.new("#{framework_name}.xcodeproj")
     target = project.new_target(:framework, framework_name, :ios)
 
@@ -88,6 +88,10 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
         config.build_settings['USER_HEADER_SEARCH_PATHS'] = "#{j2objc_home}/include"
         config.build_settings['LIBRARY_SEARCH_PATHS'] = "#{j2objc_home}/lib"
         config.build_settings['GENERATE_INFOPLIST_FILE'] = true
+
+        if useArc
+          config.build_settings['OTHER_CFLAGS'] = "-fobjc-arc"
+        end
 
         # Workaround
         config.build_settings['SUPPORTS_MACCATALYST'] = false
