@@ -29,12 +29,14 @@ module Objctify
         if project.java_sources_param.nil?
           raise Objctify::Informative, "Path to Java sources is not provided in Objctifile"
         end
+
         raise Objctify::Informative, "Provided Java sources directory does not exist: #{project.java_sources_param}" unless
             Dir.exist?(project.java_sources_param)
 
         framework_name = project.project_name_param
         java_sources = File.expand_path(project.java_sources_param)
         j2objc_home = File.expand_path(project.j2objc_config.distr_dir)
+        dependencies = project.project_dependencies_param
 
         raise Objctify::Informative, "J2ObjC home directory does not exist: #{j2objc_home}" unless
             Dir.exist?(j2objc_home)
@@ -49,7 +51,7 @@ module Objctify
           prefix_file_path = File.expand_path(project.j2objc_config.prefixes_file_path)
         end
 
-        Objctify::translate_files(java_sources, prefix_file_path, j2objc_home, framework_name, project.j2objc_config.extra_cli_args)
+        Objctify::translate_files(java_sources, prefix_file_path, j2objc_home, framework_name, dependencies, project.j2objc_config.extra_cli_args)
         puts 'Cleaning'
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
