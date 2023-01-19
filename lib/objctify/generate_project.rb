@@ -9,7 +9,7 @@ require 'xcodeproj'
 
 module Objctify
 
-  def self.generate_project(framework_name, j2objc_home, useArc)
+  def self.generate_project(framework_name, useArc)
     project = Xcodeproj::Project.new("#{framework_name}.xcodeproj")
     target = project.new_target(:framework, framework_name, :ios)
 
@@ -76,17 +76,18 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
       target.add_system_library_tbd(%w[z iconv])
       target.add_system_framework('UIKit')
 
-      path = File.expand_path("#{j2objc_home}/frameworks/JRE.xcframework")
+      path = File.expand_path("JRE.xcframework")
       unless (ref = project.frameworks_group.find_file_by_path(path))
         ref = project.frameworks_group.new_file(path, :absolute)
       end
       target.frameworks_build_phase.add_file_reference(ref, true)
 
       target.build_configurations.each do |config|
+        config.build_settings['J2OBJC_HOME'] = "j2objc_dist"
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = false
-        config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "#{j2objc_home}/frameworks"
-        config.build_settings['USER_HEADER_SEARCH_PATHS'] = "#{j2objc_home}/include"
-        config.build_settings['LIBRARY_SEARCH_PATHS'] = "#{j2objc_home}/lib"
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "$(J2OBJC_HOME)/frameworks"
+        config.build_settings['USER_HEADER_SEARCH_PATHS'] = "$(J2OBJC_HOME)/include"
+        config.build_settings['LIBRARY_SEARCH_PATHS'] = "$(J2OBJC_HOME)/lib"
         config.build_settings['GENERATE_INFOPLIST_FILE'] = true
 
         if useArc

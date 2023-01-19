@@ -15,7 +15,7 @@ module Objctify
     files_to_translate
   end
 
-  def self.translate_files(java_sources, prefix_file_path, j2objc_home, result_path, dependencies, extra_cli_args)
+  def self.translate_files(java_sources, prefix_file_path, result_path, dependencies, extra_cli_args)
     files_to_translate = collect_files(java_sources)
 
     raise Objctify::Informative, "No files to translate, check 'java_sources' parameter in Objctifile" if files_to_translate.empty?
@@ -30,15 +30,15 @@ module Objctify
       source_path = java_sources
     end
 
-    j2objc_call = compose_j2objc_call(source_path, j2objc_home, prefix_file_path, result_path, extra_cli_args) + ' ' + files_to_translate
+    j2objc_call = compose_j2objc_call(source_path, prefix_file_path, result_path, extra_cli_args) + ' ' + files_to_translate
     call = system(j2objc_call)
 
     raise Objctify::Informative, "J2Objc call is unsuccessful: #{j2objc_call}" unless call
   end
 
-  def self.compose_j2objc_call(java_sources, j2objc_home, prefix_file_path, result_path, extra_cli_args)
-    classpath = "#{j2objc_home}/lib/jsr305-3.0.0.jar"
-    j2objc_call = "#{j2objc_home}/j2objc -source 8 --swift-friendly -l #{extra_cli_args} -d #{result_path} -classpath #{classpath} -sourcepath #{java_sources}"
+  def self.compose_j2objc_call(java_sources, prefix_file_path, result_path, extra_cli_args)
+    classpath = "j2objc_dist/lib/jsr305-3.0.0.jar"
+    j2objc_call = "j2objc_dist/j2objc -source 8 --swift-friendly -l #{extra_cli_args} -d #{result_path} -classpath #{classpath} -sourcepath #{java_sources}"
 
     unless prefix_file_path.nil? || prefix_file_path == ''
       j2objc_call += " --prefixes #{prefix_file_path}"

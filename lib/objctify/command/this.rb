@@ -38,10 +38,14 @@ module Objctify
         j2objc_home = File.expand_path(project.j2objc_config.distr_dir)
         dependencies = project.project_dependencies_param
 
-        raise Objctify::Informative, "J2ObjC home directory does not exist: #{j2objc_home}" unless
-            Dir.exist?(j2objc_home)
-        raise Objctify::Informative, "J2ObjC home directory does not contain j2objc: #{j2objc_home}" unless
-            File.exist?("#{j2objc_home}/j2objc")
+        Objctify::cleanAll(framework_name)
+
+        Objctify::refreshSymlinks(j2objc_home)
+
+        # raise Objctify::Informative, "J2ObjC home directory does not exist" unless
+        #     Dir.exist?("j2objc_dist/j2objc")
+        # raise Objctify::Informative, "J2ObjC home directory does not contain JRE.xcframework" unless
+        #     File.exist?("JRE.xcframework")
 
         unless project.j2objc_config.prefixes_file_path.nil?
           unless File.exist?(project.j2objc_config.prefixes_file_path)
@@ -51,12 +55,12 @@ module Objctify
           prefix_file_path = File.expand_path(project.j2objc_config.prefixes_file_path)
         end
 
-        Objctify::translate_files(java_sources, prefix_file_path, j2objc_home, framework_name, dependencies, project.j2objc_config.extra_cli_args)
+        Objctify::translate_files(java_sources, prefix_file_path, framework_name, dependencies, project.j2objc_config.extra_cli_args)
         puts 'Cleaning'
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
         useArc = project.j2objc_config.extra_cli_args.include? "-use-arc"
-        Objctify::generate_project(framework_name, j2objc_home, useArc)
+        Objctify::generate_project(framework_name, useArc)
         puts 'Done'
       end
     end

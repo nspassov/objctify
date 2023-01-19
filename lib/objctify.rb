@@ -14,6 +14,9 @@ require 'objctify/informative'
 require 'objctify/translator_runner'
 require "objctify/version"
 require 'objctify/j2objc/j2_obj_c_prefixes'
+require 'objctify/symlinks'
+require 'objctify/clean'
+
 
 module Objctify
 end
