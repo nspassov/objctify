@@ -42,11 +42,6 @@ module Objctify
 
         Objctify::refreshSymlinks(j2objc_home)
 
-        # raise Objctify::Informative, "J2ObjC home directory does not exist" unless
-        #     Dir.exist?("j2objc_dist/j2objc")
-        # raise Objctify::Informative, "J2ObjC home directory does not contain JRE.xcframework" unless
-        #     File.exist?("JRE.xcframework")
-
         unless project.j2objc_config.prefixes_file_path.nil?
           unless File.exist?(project.j2objc_config.prefixes_file_path)
             raise Objctify::Informative, "Specified prefixes file does not exist: #{project.j2objc_config.prefixes_file_path}"

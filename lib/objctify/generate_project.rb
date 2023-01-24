@@ -87,7 +87,6 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = false
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "$(J2OBJC_HOME)/frameworks"
         config.build_settings['USER_HEADER_SEARCH_PATHS'] = "$(J2OBJC_HOME)/include"
-        config.build_settings['LIBRARY_SEARCH_PATHS'] = "$(J2OBJC_HOME)/lib"
         config.build_settings['GENERATE_INFOPLIST_FILE'] = true
 
         if useArc
