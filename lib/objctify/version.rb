@@ -6,5 +6,5 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 module Objctify
-  VERSION = "0.4.1".freeze
+  VERSION = "0.4.2".freeze
 end

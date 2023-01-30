@@ -37,6 +37,7 @@ module Objctify
         java_sources = File.expand_path(project.java_sources_param)
         j2objc_home = File.expand_path(project.j2objc_config.distr_dir)
         dependencies = project.project_dependencies_param
+        external_frameworks = project.project_frameworks_param
 
         Objctify::cleanAll(framework_name)
 
@@ -55,7 +56,7 @@ module Objctify
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
         useArc = project.j2objc_config.extra_cli_args.include? "-use-arc"
-        Objctify::generate_project(framework_name, useArc)
+        Objctify::generate_project(framework_name, useArc, external_frameworks)
         puts 'Done'
       end
     end

@@ -11,7 +11,7 @@ module Objctify
       attr_accessor :distr_dir, :prefixes_file_path, :extra_cli_args
     end
 
-    attr_accessor :project_name_param, :java_sources_param, :project_dependencies_param
+    attr_accessor :project_name_param, :java_sources_param, :project_dependencies_param, :project_frameworks_param
 
     def initialize
       @j2objc_config = J2ObjCSettings.new
@@ -29,6 +29,10 @@ module Objctify
 
     def dependencies(dependencies)
       self.project_dependencies_param = dependencies
+    end
+
+    def frameworks(frameworks)
+      self.project_frameworks_param = frameworks
     end
 
     def j2objc_config
