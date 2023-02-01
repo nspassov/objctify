@@ -122,10 +122,10 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = true
 
         if useArc
-          config.build_settings['OTHER_LDLAGS'] = Array(["-ObjC", "-fobjc-arc-exceptions", "-lz", "-licucore"])
+          config.build_settings['OTHER_LDFLAGS'] = Array(["-ObjC", "-fobjc-arc-exceptions", "-lz", "-licucore"])
           config.build_settings['OTHER_CFLAGS'] = Array(["-fobjc-arc"])
         else
-          config.build_settings['OTHER_LDLAGS'] = Array(["-ObjC", "-lz", "-licucore"])
+          config.build_settings['OTHER_LDFLAGS'] = Array(["-ObjC", "-lz", "-licucore"])
         end
 
         # Workaround
