@@ -102,6 +102,8 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
       end
 
       target.build_configurations.each do |config|
+
+        # Framework specific flags
         config.build_settings['J2OBJC_HOME'] = "j2objc_dist"
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "$(J2OBJC_HOME)/frameworks"
         config.build_settings['HEADER_SEARCH_PATHS'] = Array(["$(J2OBJC_HOME)/include"])
@@ -110,12 +112,21 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
             ProjectConfigurator::add_headers(framework, config)
           end
         end
+
+        config.build_settings['MACH_O_TYPE'] = "staticlib"
         config.build_settings['GENERATE_INFOPLIST_FILE'] = true
 
         # ObjectiveC specific flags
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = useArc
         config.build_settings['CLANG_ENABLE_OBJC_WEAK'] = true
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = true
+
+        if useArc
+          config.build_settings['OTHER_LDLAGS'] = Array(["-ObjC", "-fobjc-arc-exceptions", "-lz", "-licucore"])
+          config.build_settings['OTHER_CFLAGS'] = Array(["-fobjc-arc"])
+        else
+          config.build_settings['OTHER_LDLAGS'] = Array(["-ObjC", "-lz", "-licucore"])
+        end
 
         # Workaround
         config.build_settings['SUPPORTS_MACCATALYST'] = false
