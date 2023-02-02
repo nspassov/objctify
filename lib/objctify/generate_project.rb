@@ -88,8 +88,8 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
       unless external_frameworks.nil?
         header_file.write("\n")
         header_file.write(external_frameworks
-          .map { |framework_path| File.basename(framework_path) }
-          .map { |framework| "#import <#{framework}/#{framework}.h>\n" }
+          .map { |framework_path| File.basename(framework_path, ".xcframework") }
+          .map { |framework| "#import <#{framework}/#{framework}.h>" } * "\n"
         )
       end
     end
