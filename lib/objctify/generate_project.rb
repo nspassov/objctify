@@ -70,6 +70,7 @@ module Objctify
 //
 
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for #{framework_name}.
 FOUNDATION_EXPORT double #{framework_name}VersionNumber;
@@ -78,9 +79,19 @@ FOUNDATION_EXPORT double #{framework_name}VersionNumber;
 FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
 
 "
-
       header_file.write(header_template)
-      header_file.write(headers_build_phase.files_references.map(&:path).map { |header_file_name| "#include <#{framework_name}/" + header_file_name + '>' } * "\n")
+      header_file.write(headers_build_phase.files_references
+        .map(&:path)
+        .map { |header_file_name| "#include <#{framework_name}/" + header_file_name + '>' } * "\n"
+      )
+
+      unless external_frameworks.nil?
+        header_file.write("\n")
+        header_file.write(external_frameworks
+          .map { |framework_path| File.basename(framework_path) }
+          .map { |framework| "#import <#{framework}/#{framework}.h>\n" }
+        )
+      end
     end
 
     dir, base = header_file_path.split
@@ -92,6 +103,7 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
     project.targets.each do |target|
       target.add_system_library_tbd(%w[z iconv])
       target.add_system_framework('UIKit')
+      target.add_system_framework('Foundation')
 
       ProjectConfigurator::add_framework("JRE.xcframework", project, target)
 
@@ -117,6 +129,8 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
         config.build_settings['GENERATE_INFOPLIST_FILE'] = true
 
         # ObjectiveC specific flags
+        config.build_settings['GCC_GENERATE_DEBUGGING_SYMBOLS'] = true
+        config.build_settings['CLANG_ENABLE_MODULES'] = true
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = useArc
         config.build_settings['CLANG_ENABLE_OBJC_WEAK'] = true
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = true
