@@ -137,9 +137,10 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
 
         if useArc
           config.build_settings['OTHER_LDFLAGS'] = Array(["-ObjC", "-fobjc-arc-exceptions", "-lz", "-licucore"])
-          config.build_settings['OTHER_CFLAGS'] = Array(["-fobjc-arc"])
+          config.build_settings['OTHER_CFLAGS'] = Array(["-fobjc-arc", "-fembed-bitcode"])
         else
           config.build_settings['OTHER_LDFLAGS'] = Array(["-ObjC", "-lz", "-licucore"])
+          config.build_settings['OTHER_CFLAGS'] = Array(["-fembed-bitcode"])
         end
 
         # Workaround
