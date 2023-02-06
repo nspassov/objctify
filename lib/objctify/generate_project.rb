@@ -9,24 +9,7 @@ require 'xcodeproj'
 
 module Objctify
 
-  class ProjectConfigurator
-
-    def self.add_framework(path, project, target)
-      path = File.expand_path(path)
-      unless (ref = project.frameworks_group.find_file_by_path(path))
-        ref = project.frameworks_group.new_file(path, :absolute)
-      end
-      target.frameworks_build_phase.add_file_reference(ref, true)
-    end
-
-    def self.add_headers(path, config)
-      path = File.expand_path(path)
-      config.build_settings['HEADER_SEARCH_PATHS'].append("#{path}/include")
-    end
-
-  end
-
-  def self.generate_project(framework_name, useArc, external_frameworks)
+  def self.generate_project(framework_name, useArc, external_frameworks, objc_sources)
     project = Xcodeproj::Project.new("#{framework_name}.xcodeproj")
     target = project.new_target(:framework, framework_name, :ios)
 
@@ -34,71 +17,13 @@ module Objctify
     headers_build_phase = target.headers_build_phase
 
     #add files
-    Pathname(framework_name).find do |path|
-      dir, base = path.split
-      if path.directory?
-
-        if path.to_s == framework_name
-          project.new_group base.to_s, base
-        else
-          group_to_append_to = project[dir.to_s]
-          group_to_append_to.new_group base.to_s, base
-        end
-
-      elsif path.file?
-
-        group = project[dir.to_s]
-        new_ref = group.new_reference base
-
-        if new_ref.last_known_file_type == 'sourcecode.c.h'
-          build_file = headers_build_phase.add_file_reference new_ref
-          build_file.settings = { ATTRIBUTES: ['', 'Public'] }
-        elsif new_ref.last_known_file_type == 'sourcecode.c.objc'
-          source_build_phase.add_file_reference new_ref
-        end
-
-      end
+    ProjectConfigurator::add_files(framework_name, project, source_build_phase, headers_build_phase)
+    unless objc_sources.nil?
+      ProjectConfigurator::add_files(objc_sources, project, source_build_phase, headers_build_phase)
     end
 
-    header_file_path = Pathname("#{framework_name}/#{framework_name}.h")
-
-    File.open(header_file_path, 'w') do |header_file|
-      header_template = "//
-//  #{framework_name}.h
-//  #{framework_name}
-//
-//
-
-#import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
-
-//! Project version number for #{framework_name}.
-FOUNDATION_EXPORT double #{framework_name}VersionNumber;
-
-//! Project version string for #{framework_name}.
-FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
-
-"
-      header_file.write(header_template)
-      header_file.write(headers_build_phase.files_references
-        .map(&:path)
-        .map { |header_file_name| "#include <#{framework_name}/" + header_file_name + '>' } * "\n"
-      )
-
-      unless external_frameworks.nil?
-        header_file.write("\n")
-        header_file.write(external_frameworks
-          .map { |framework_path| File.basename(framework_path, ".xcframework") }
-          .map { |framework| "#import <#{framework}/#{framework}.h>" } * "\n"
-        )
-      end
-    end
-
-    dir, base = header_file_path.split
-
-    header_file_ref = project[dir.to_s].new_reference base
-    header_build_file = headers_build_phase.add_file_reference header_file_ref
-    header_build_file.settings = { ATTRIBUTES: ['', 'Public'] }
+    # add headers
+    ProjectConfigurator::create_header(project, headers_build_phase, framework_name, external_frameworks)
 
     project.targets.each do |target|
       target.add_system_library_tbd(%w[z iconv])
@@ -121,7 +46,7 @@ FOUNDATION_EXPORT const unsigned char #{framework_name}VersionString[];
         config.build_settings['HEADER_SEARCH_PATHS'] = Array(["$(J2OBJC_HOME)/include"])
         unless external_frameworks.nil?
           external_frameworks.each do |framework|
-            ProjectConfigurator::add_headers(framework, config)
+            ProjectConfigurator::add_headersPath(framework, config)
           end
         end
 

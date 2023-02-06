@@ -10,10 +10,12 @@ require 'objctify/context'
 
 require 'objctify/fix_imports'
 require 'objctify/generate_project'
+require 'objctify/project_configurator'
 require 'objctify/informative'
 require 'objctify/translator_runner'
 require "objctify/version"
 require 'objctify/j2objc/j2_obj_c_prefixes'
+require 'objctify/templates'
 require 'objctify/symlinks'
 require 'objctify/clean'
 
