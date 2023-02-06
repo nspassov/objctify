@@ -22,15 +22,12 @@ module Objctify
         dir, base = path.split
         if path.directory?
           if path.to_s == folder
-            puts "Debug add_files #{folder} new group #{base.to_s}"
             project.new_group base.to_s, base
           elsif group_to_append_to = project[dir.to_s]
-            puts "Debug add_files #{folder} appending group #{dir.to_s} #{base.to_s}"
             group_to_append_to.new_group base.to_s, base
           end
   
         elsif path.file?
-          puts "Debug add_files #{folder} file #{dir.to_s} #{base.to_s}"
           group = project[dir.to_s]
           new_ref = group.new_reference base
   
