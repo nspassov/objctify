@@ -57,7 +57,21 @@ module Objctify
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
         useArc = project.j2objc_config.extra_cli_args.include? "-use-arc"
-        Objctify::generate_project(framework_name, useArc, external_frameworks, objc_sources)
+        project = Objctify::generate_project(framework_name, useArc, external_frameworks, objc_sources)
+        puts 'Patching'
+        sources = project.targets.first().source_build_phase.files
+        headers = project.targets.first().headers_build_phase.files
+        framework_header = headers.find { |file| file.display_name == "#{framework_name}.h" }.file_ref.full_path
+        # fix modular includes for framework name
+        Objctify::fix_modular_includes(sources, headers, framework_name, framework_header)
+        # fix modular includes for external frameworks
+        unless external_frameworks.nil?
+          external_frameworks.each do |framework_path|
+            framework_name = File.basename(framework_path, ".xcframework")
+            framework_header = "#{framework_path}/include/#{framework_name}.h"
+            Objctify::fix_modular_includes(sources, headers, framework_name, framework_header)
+          end
+        end
         puts 'Done'
       end
     end

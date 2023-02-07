@@ -74,6 +74,7 @@ module Objctify
     end
 
     project.save
+    project
   end
 
 end

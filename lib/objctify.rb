@@ -9,6 +9,7 @@ require 'objctify/command'
 require 'objctify/context'
 
 require 'objctify/fix_imports'
+require 'objctify/fix_modular_includes'
 require 'objctify/generate_project'
 require 'objctify/project_configurator'
 require 'objctify/informative'
