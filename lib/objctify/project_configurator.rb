@@ -48,10 +48,6 @@ module Objctify
       File.open(header_file_path, 'w') do |header_file|
         header_template = Templates::header(framework_name)
         header_file.write(header_template)
-        header_file.write(headers_build_phase.files_references
-          .map(&:path)
-          .map { |header_file_name| "#import <#{framework_name}/" + header_file_name + '>' } * "\n"
-        )
 
         unless external_frameworks.nil?
           header_file.write("\n")
@@ -60,6 +56,14 @@ module Objctify
             .map { |framework| "#import <#{framework}/#{framework}.h>" } * "\n"
           )
         end
+
+        header_file.write("\n")
+
+        header_file.write(headers_build_phase.files_references
+          .map(&:path)
+          .map { |header_file_name| "#include <#{framework_name}/" + header_file_name + '>' } * "\n"
+        )
+
       end
 
       dir, base = header_file_path.split
