@@ -59,6 +59,7 @@ module Objctify
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = useArc
         config.build_settings['CLANG_ENABLE_OBJC_WEAK'] = true
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = true
+        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = false
 
         if useArc
           config.build_settings['OTHER_LDFLAGS'] = Array(["-ObjC", "-fobjc-arc-exceptions", "-lz", "-licucore"])
