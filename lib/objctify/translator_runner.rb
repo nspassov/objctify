@@ -38,7 +38,7 @@ module Objctify
 
   def self.compose_j2objc_call(java_sources, prefix_file_path, result_path, extra_cli_args)
     classpath = "j2objc_dist/lib/jsr305-3.0.0.jar"
-    j2objc_call = "j2objc_dist/j2objc -source 8 --swift-friendly -l #{extra_cli_args} -d #{result_path} -classpath #{classpath} -sourcepath #{java_sources}"
+    j2objc_call = "j2objc_dist/j2objc -l #{extra_cli_args} -d #{result_path} -classpath #{classpath} -sourcepath #{java_sources}"
 
     unless prefix_file_path.nil? || prefix_file_path == ''
       j2objc_call += " --prefixes #{prefix_file_path}"
