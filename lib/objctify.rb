@@ -16,6 +16,7 @@ require 'objctify/informative'
 require 'objctify/translator_runner'
 require "objctify/version"
 require 'objctify/j2objc/j2_obj_c_prefixes'
+require 'objctify/j2objc/headers_composer'
 require 'objctify/templates'
 require 'objctify/symlinks'
 require 'objctify/clean'

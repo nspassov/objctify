@@ -56,14 +56,17 @@ module Objctify
         puts 'Cleaning'
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
+        jre_header_path = JreHeaderComposer.compose("j2objc_dist/include", framework_name)
         useArc = project.j2objc_config.extra_cli_args.include? "-use-arc"
         project = Objctify::generate_project(framework_name, useArc, external_frameworks, objc_sources)
         puts 'Patching'
         sources = project.targets.first().source_build_phase.files
         headers = project.targets.first().headers_build_phase.files
         framework_header = headers.find { |file| file.display_name == "#{framework_name}.h" }.file_ref.full_path
-        # fix modular includes for framework name
+        # fix modular includes for main framework
         Objctify::fix_modular_includes(sources, headers, framework_name, framework_header)
+        # fix modular includes for JRE frameworks
+        Objctify::fix_modular_includes(sources, headers, "JRE", jre_header_path)
         # fix modular includes for external frameworks
         unless external_frameworks.nil?
           external_frameworks.each do |framework_path|

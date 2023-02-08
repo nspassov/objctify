@@ -6,8 +6,11 @@ module Objctify
         puts "Fixing include-blocks of headers from framework #{framework_name}"
 
         # extract all headers from umbrella header of framework
-        framework_headers = File.read(framework_header).scan(/\<#{framework_name}\/([\w?+]+.h)\>/m).map { |item| item[0] }
-
+        if framework_name == ""
+            framework_headers = File.read(framework_header).scan(/\<([\w?+\/]+.h)\>/m).map { |item| item[0] }
+        else
+            framework_headers = File.read(framework_header).scan(/\<#{framework_name}\/([\w?+\/]+.h)\>/m).map { |item| item[0] }
+        end
         # iterate through all files of target
         Objctify::replace_includes(sources, framework_name, framework_headers)
         Objctify::replace_includes(headers, framework_name, framework_headers)
@@ -28,7 +31,11 @@ module Objctify
 
                 # replace #include "Header.h" with #include <Module/Header.h>
                 headers.each do |header|
-                    file_body = file_body.gsub(/\"#{header}\"/, "<#{framework_name}/#{header}>")
+                    if framework_name == ""
+                        file_body = file_body.gsub(/\"#{header}\"/, "<#{header}>")
+                    else
+                        file_body = file_body.gsub(/\"#{header}\"/, "<#{framework_name}/#{header}>")
+                    end
                 end
 
                 File.open(file_ref.full_path, 'w') do |file|
