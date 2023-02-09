@@ -43,7 +43,8 @@ module Objctify
         # Framework specific flags
         config.build_settings['J2OBJC_HOME'] = "j2objc_dist"
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] = "$(J2OBJC_HOME)/frameworks"
-        config.build_settings['HEADER_SEARCH_PATHS'] = Array(["$(J2OBJC_HOME)/include"])
+        config.build_settings['HEADER_SEARCH_PATHS'] = Array(["$(J2OBJC_HOME)/include", "$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers"])
+        config.build_settings['SWIFT_INCLUDE_PATHS'] = "$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers"
         unless external_frameworks.nil?
           external_frameworks.each do |framework|
             ProjectConfigurator::add_headersPath(framework, config)
@@ -51,6 +52,7 @@ module Objctify
         end
 
         config.build_settings['MACH_O_TYPE'] = "staticlib"
+        config.build_settings['DEFINES_MODULE'] = true
         config.build_settings['GENERATE_INFOPLIST_FILE'] = true
 
         # ObjectiveC specific flags
@@ -58,8 +60,8 @@ module Objctify
         config.build_settings['CLANG_ENABLE_MODULES'] = true
         config.build_settings['CLANG_ENABLE_OBJC_ARC'] = useArc
         config.build_settings['CLANG_ENABLE_OBJC_WEAK'] = true
-        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = true
-        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = false
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = false
+        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = true
 
         if useArc
           config.build_settings['OTHER_LDFLAGS'] = Array(["-ObjC", "-fobjc-arc-exceptions", "-lz", "-licucore"])
