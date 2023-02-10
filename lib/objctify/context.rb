@@ -5,13 +5,18 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+require 'logger'
+
 module Objctify
+
   class Context
     class J2ObjCSettings
       attr_accessor :distr_dir, :prefixes_file_path, :extra_cli_args
     end
 
     attr_accessor :project_name_param, :java_sources_param, :objc_sources_param, :project_dependencies_param, :project_frameworks_param
+
+    attr_accessor :debug
 
     def initialize
       @j2objc_config = J2ObjCSettings.new
@@ -42,6 +47,14 @@ module Objctify
     def j2objc_config
       yield(@j2objc_config) if block_given?
       @j2objc_config
+    end
+
+    # Logger setuo
+    $logger = Logger.new(STDOUT)
+    $logger.level = Logger::INFO
+
+    def debug 
+      $logger.level = Logger::DEBUG
     end
 
   end
