@@ -3,7 +3,7 @@ module Objctify
 
     def self.fix_modular_includes(sources, headers, framework_name, framework_header)
         
-        puts "Fixing include-blocks of headers from framework #{framework_name}"
+        $logger.info("Fixing include-blocks of headers from framework #{framework_name}")
 
         # extract all headers from umbrella header of framework
         if framework_name == ""
@@ -20,12 +20,12 @@ module Objctify
         files
             .map(&:file_ref)
             .select { |file_ref|   
-                puts "Looking at #{file_ref.display_name} at #{file_ref.full_path}"
+                $logger.debug("Looking at #{file_ref.display_name} at #{file_ref.full_path}")
                 file_body = File.read(file_ref.full_path)
                 headers.any? { |header| file_body.include?(header) }
             }
             .each do |file_ref|
-                puts "Replacing includes in #{file_ref.display_name}"
+                $logger.debug("Replacing includes in #{file_ref.display_name}")
                 
                 file_body = File.read(file_ref.full_path)
 

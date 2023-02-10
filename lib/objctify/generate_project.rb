@@ -43,7 +43,7 @@ module Objctify
       # Framework specific flags
       config.set_setting('J2OBJC_HOME', "j2objc_dist")
       config.set_setting('FRAMEWORK_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/frameworks"]))
-      config.set_setting('HEADER_SEARCH_PATHS', Array([]))
+      config.set_setting('HEADER_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers"]))
       config.set_setting('USER_HEADER_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/include"]))
       config.set_setting('LIBRARY_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/lib"]))
       config.set_setting('SWIFT_INCLUDE_PATHS', "$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers")

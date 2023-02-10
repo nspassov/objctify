@@ -16,7 +16,7 @@ module Objctify
         contents = File.read(template_path)
         File.write('Objctifile', contents)
 
-        puts 'Have fun!'
+        $logger.info('Have fun!')
       end
     end
   end
