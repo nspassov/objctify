@@ -15,7 +15,9 @@ module Objctify
     def self.add_headersPath(path, config)
       path = File.expand_path(path)
       setting = config.get_setting('HEADER_SEARCH_PATHS')
-      config.set_setting('HEADER_SEARCH_PATHS', setting.append("#{path}/include"))
+      setting.each do |value|
+        value.append("#{path}/include")
+      end
     end
 
     def self.add_files(folder, project, source_build_phase, headers_build_phase)
