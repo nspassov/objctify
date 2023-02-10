@@ -52,17 +52,12 @@ module Objctify
         header_template = Templates::header(framework_name)
         header_file.write(header_template)
 
-        
-
         unless external_frameworks.nil?
           header_file.write("\n")
           header_file.write(external_frameworks
             .map { |framework_path| File.basename(framework_path, ".xcframework") }
             .map { |framework| "#import <#{framework}/#{framework}.h>" } * "\n"
           )
-        else 
-          header_file.write("\n")
-          header_file.write("#import <JRE.h>")
         end
 
         header_file.write("\n")

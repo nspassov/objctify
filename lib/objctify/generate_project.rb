@@ -11,7 +11,7 @@ module Objctify
 
   def self.generate_project(framework_name, useArc, external_frameworks, objc_sources)
     project = Xcodeproj::Project.new("#{framework_name}.xcodeproj")
-    target = project.new_target(:framework, framework_name, :ios)
+    target = project.new_target(:framework, framework_name, :ios, '13.0', nil, :objc, framework_name)
 
     source_build_phase = target.source_build_phase
     headers_build_phase = target.headers_build_phase
@@ -42,11 +42,12 @@ module Objctify
 
       # Framework specific flags
       config.set_setting('J2OBJC_HOME', "j2objc_dist")
-      config.set_setting('FRAMEWORK_SEARCH_PATHS', "$(J2OBJC_HOME)/frameworks")
-      config.set_setting('HEADER_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/include"]))
+      config.set_setting('FRAMEWORK_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/frameworks"]))
+      config.set_setting('HEADER_SEARCH_PATHS', Array([]))
+      config.set_setting('USER_HEADER_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/include"]))
+      config.set_setting('LIBRARY_SEARCH_PATHS', Array(["$(J2OBJC_HOME)/lib"]))
+      config.set_setting('SWIFT_INCLUDE_PATHS', "$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers")
 
-      # config.build_settings['HEADER_SEARCH_PATHS'] = Array(["$(J2OBJC_HOME)/include", "$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers"])
-      # config.build_settings['SWIFT_INCLUDE_PATHS'] = "$(J2OBJC_HOME)/frameworks/JRE.xcframework/Headers"
       unless external_frameworks.nil?
         external_frameworks.each do |framework|
           ProjectConfigurator::add_headersPath(framework, config)
@@ -63,7 +64,7 @@ module Objctify
       config.set_setting('CLANG_ENABLE_MODULES', true)
       config.set_setting('CLANG_ENABLE_OBJC_ARC', useArc)
       config.set_setting('CLANG_ENABLE_OBJC_WEAK', true)
-      config.set_setting('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES', false)
+      config.set_setting('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES', true)
       config.set_setting('CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER', true)
 
       if useArc

@@ -32,7 +32,7 @@ module Objctify
                 # replace #include "Header.h" with #include <Module/Header.h>
                 headers.each do |header|
                     if framework_name == ""
-                        file_body = file_body.gsub(/\"#{header}\"/, "<#{header}>")
+                        file_body = file_body.gsub(/<#{header}>/, "\"#{header}\"")
                     else
                         file_body = file_body.gsub(/\"#{header}\"/, "<#{framework_name}/#{header}>")
                     end

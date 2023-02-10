@@ -56,7 +56,7 @@ module Objctify
         puts 'Cleaning'
         Objctify::fix_imports(framework_name, prefix_file_path)
         puts 'Plumbing'
-        jre_header_path = JreHeaderComposer.compose("j2objc_dist/frameworks/JRE.xcframework/Headers", framework_name)
+        jre_header_path = JreHeaderComposer.compose("j2objc_dist/include", framework_name)
         useArc = project.j2objc_config.extra_cli_args.include? "-use-arc"
         project = Objctify::generate_project(framework_name, useArc, external_frameworks, objc_sources)
         puts 'Patching'

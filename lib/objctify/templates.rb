@@ -9,8 +9,8 @@ module Objctify
 //
 //
           
-#import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
+@import UIKit;
+@import Foundation;
           
 //! Project version number for #{name}.
 FOUNDATION_EXPORT double #{name}VersionNumber;

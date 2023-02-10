@@ -10,7 +10,7 @@ module Objctify
                 header_file.write(header_template)
         
                 header_file.write(jre_headers
-                  .map { |header_file_name| "#include <" + header_file_name + '>' } * "\n"
+                  .map { |header_file_name| "#include \"" + header_file_name + '\"' } * "\n"
                 )
         
             end
