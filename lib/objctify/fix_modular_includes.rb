@@ -28,12 +28,13 @@ module Objctify
                 $logger.debug("Replacing includes in #{file_ref.display_name}")
                 
                 file_body = File.read(file_ref.full_path)
-
-                # replace #include "Header.h" with #include <Module/Header.h>
+                
                 headers.each do |header|
                     if framework_name == ""
+                        # make all JRE includes with quotes
                         file_body = file_body.gsub(/<#{header}>/, "\"#{header}\"")
                     else
+                        # replace #include "Header.h" with #include <Module/Header.h>
                         file_body = file_body.gsub(/\"#{header}\"/, "<#{framework_name}/#{header}>")
                     end
                 end
