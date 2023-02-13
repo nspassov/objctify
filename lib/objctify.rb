@@ -10,6 +10,7 @@ require 'objctify/context'
 
 require 'objctify/fix_imports'
 require 'objctify/fix_modular_includes'
+require 'objctify/fix_compatibility_alias'
 require 'objctify/generate_project'
 require 'objctify/project_configurator'
 require 'objctify/informative'

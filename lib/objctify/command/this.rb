@@ -65,7 +65,7 @@ module Objctify
         framework_header = headers.find { |file| file.display_name == "#{framework_name}.h" }.file_ref.full_path
         # fix modular includes for main framework
         Objctify::fix_modular_includes(sources, headers, framework_name, framework_header)
-        # fix modular includes for JRE frameworks
+        # sync includes for JRE frameworks
         Objctify::fix_modular_includes(sources, headers, "", jre_header_path)
         # fix modular includes for external frameworks
         unless external_frameworks.nil?
@@ -73,6 +73,9 @@ module Objctify
             framework_name = File.basename(framework_path, ".xcframework")
             framework_header = "#{framework_path}/include/#{framework_name}.h"
             Objctify::fix_modular_includes(sources, headers, framework_name, framework_header)
+            # fix compatibility alias
+            all_framework_headers = Dir["#{framework_path}/include/*.h"]
+            Objctify::fix_compatibility_alias(sources, headers, all_framework_headers)
           end
         end
         $logger.info('Done')
