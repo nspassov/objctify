@@ -20,13 +20,12 @@ module Objctify
 
     raise Objctify::Informative, "No files to translate, check 'java_sources' parameter in Objctifile" unless files_to_translate.length > 0
 
-    j2objcCall = "#{j2objc_home}/j2objc -source 8 --swift-friendly -Xno-source-headers -l --strip-reflection -d #{result_path} -classpath j2objc-dist/lib/jsr305-3.0.0.jar -sourcepath #{java_sources}"
+    j2objcCall = "#{j2objc_home}/j2objc -source 8 --swift-friendly -Xno-source-headers -l --strip-reflection -d #{result_path} -classpath #{j2objc_home}/lib/jsr305-3.0.0.jar -sourcepath #{java_sources}"
     unless prefix_file_path.nil? || prefix_file_path == ""
       j2objcCall += " --prefixes #{prefix_file_path}"
     end
     j2objcCall += " #{files_to_translate}"
     call = system(j2objcCall)
-
     raise Objctify::Informative, "J2Objc call is unsuccessful: #{j2objcCall}" unless call
   end
 

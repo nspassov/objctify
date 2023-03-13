@@ -20,7 +20,7 @@ routine actions. Basically it turns your Java sources into an iOS framework read
   spec.executables   = %w(objctify)
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = '>= 2.0.0'
+  spec.required_ruby_version = '>= 3.2.0'
 
   spec.add_dependency 'claide', '< 2.0', '>= 0.9.1'
   spec.add_dependency 'xcodeproj', '< 2.0.0', '>= 1.3.0'
