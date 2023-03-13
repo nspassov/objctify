@@ -12,7 +12,7 @@ module Objctify
     def initialize(prefix_file_path)
       @prefixes = Hash.new
 
-      if !prefix_file_path.nil? && File.exists?(prefix_file_path)
+      if !prefix_file_path.nil? && File.exist?(prefix_file_path)
         File.open(prefix_file_path).each do |line|
           if (res = line.match(/([a-zA-Z.*]+):\s+([A-Z]+)/))
             key = res[1]
